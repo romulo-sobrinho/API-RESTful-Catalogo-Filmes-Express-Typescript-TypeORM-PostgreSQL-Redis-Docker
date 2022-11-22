@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import MoviesController from '../controllers/MoviesController';
 import { celebrate, Joi, Segments } from 'celebrate';
-import isAuthenticated from '@modules/users/middlewares/isAuthenticated';
+import isAuthenticated from '@shared/http/middlewares/isAuthenticated';
 
 const moviesRouter = Router();
 
 const moviesController = new MoviesController();
 
-moviesRouter.get('/', isAuthenticated, moviesController.index);
+moviesRouter.use(isAuthenticated);
+
+moviesRouter.get('/', moviesController.index);
 
 moviesRouter.get(
   '/:id',
@@ -16,7 +18,6 @@ moviesRouter.get(
       id: Joi.string().uuid().required(),
     }
   }),
-  isAuthenticated,
   moviesController.show
 );
 
@@ -30,7 +31,6 @@ moviesRouter.post(
       url_image: Joi.string().required(),
     }
   }),
-  isAuthenticated,
   moviesController.create
 );
 
@@ -47,7 +47,6 @@ moviesRouter.put(
       url_image: Joi.string().required(),
     }
   }),
-  isAuthenticated,
   moviesController.update
 );
 
@@ -58,7 +57,6 @@ moviesRouter.delete(
       id: Joi.string().uuid().required(),
     }
   }),
-  isAuthenticated,
   moviesController.delete
 );
 
