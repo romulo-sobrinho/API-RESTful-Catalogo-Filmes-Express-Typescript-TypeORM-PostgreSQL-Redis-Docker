@@ -30,6 +30,21 @@ usersRouter.post(
   usersController.create
 );
 
+usersRouter.put(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    }
+  }),
+  usersController.update
+);
+
 usersRouter.delete(
   '/:id',
   celebrate({

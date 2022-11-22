@@ -1,0 +1,439 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de catálogo de filmes com autenticação JWT",
+    "description": "Essa API tem como objetivo manipulação do CRUD de filmes, usuários e possui autenticação utilizando JWT",
+    "contact": {
+      "name": "API Support",
+      "email": "romulosilva001@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "{url}:{port}",
+      "description": "Development server",
+      "variables": {
+        "url": {
+          "default": "http://localhost"
+        },
+        "port": {
+          "default": "3333"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:3333",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "summary": "Cadastro de usuário",
+        "description": "Essa rota é responsável por cadastrar um novo usuário",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Name LastName",
+                    "email": "email@gmail.com",
+                    "password": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Email address already used."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listagem de todos os usuários",
+        "description": "Essa rota é responsável por pesquisar todos os usuários cadastrados",
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Pesquisa de usuário por ID",
+        "description": "Essa rota é responsável por pesquisar um usuário pelo ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do usuário para pesquisa",
+            "required": true
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "User not found."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualização de usuário por ID",
+        "description": "Essa rota é responsável por atualizar os dados de um usuário pesquisado pelo ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do usuário para atualização",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Other Name Other LastName",
+                    "email": "otheremail@gmail.com",
+                    "password": "otherpassword123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "User not found."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclusão de usuário por ID",
+        "description": "Essa rota é responsável por excluir um usuário pelo ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do usuário para pesquisa",
+            "required": true
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "User not found."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies": {
+      "post": {
+        "summary": "Cadastro de filme",
+        "description": "Essa rota é responsável por cadastrar um novo filme",
+        "tags": ["Movies"],
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "title": "Matrix",
+                    "description": "Situado no século 22, Matrix conta a história de um hacker de computador que se junta a um grupo de insurgentes clandestinos lutando contra os vastos e poderosos computadores que agora governam a Terra.",
+                    "genre": "Ação, Ficção Científica",
+                    "url_image": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Invalid JWT Token."
+          },
+          "400": {
+            "description": "There is already a movie with this name."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listagem de todos os filmes",
+        "description": "Essa rota é responsável por pesquisar todos os filmes cadastrados",
+        "tags": ["Movies"],
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "responses": {
+          "401": {
+            "description": "Invalid JWT Token."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "summary": "Pesquisa de filme por ID",
+        "description": "Essa rota é responsável por pesquisar um filme pelo ID",
+        "tags": ["Movies"],
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do filme para pesquisa",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Invalid JWT Token."
+          },
+          "400": {
+            "description": "Movie not found."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualização de filme por ID",
+        "description": "Essa rota é responsável por atualizar os dados de um filme pesquisado pelo ID",
+        "tags": ["Movies"],
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do filme para atualização",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "title": "Other Matrix",
+                    "description": "Other Situado no século 22, Matrix conta a história de um hacker de computador que se junta a um grupo de insurgentes clandestinos lutando contra os vastos e poderosos computadores que agora governam a Terra.",
+                    "genre": "Other Ação, Ficção Científica",
+                    "url_image": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Invalid JWT Token."
+          },
+          "400": {
+            "description": "Movie not found."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclusão de filme por ID",
+        "description": "Essa rota é responsável por excluir um filme pelo ID",
+        "tags": ["Movies"],
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do filme para pesquisa",
+            "required": true
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Movie not found."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": [{}]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "string"
+          },
+          "url_image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -17,6 +17,6 @@ export default function isAuthenticated(request: Request, response: Response, ne
 
     return next();
   } catch {
-    throw new AppError('Invalid JWT Token.');
+    throw new AppError('Invalid JWT Token.', 401);
   }
 }
