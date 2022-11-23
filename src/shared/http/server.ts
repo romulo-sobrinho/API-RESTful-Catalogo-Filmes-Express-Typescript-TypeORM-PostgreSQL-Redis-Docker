@@ -9,12 +9,15 @@ import AppError from '@shared/errors/AppError';
 import '@shared/typeorm'
 import swaggerUi from 'swagger-ui-express'
 import swaggerDocs from '@shared/swagger/swagger.json';
+import rateLimiter from '@shared/http/middlewares/rateLimiter';
 
 const app = express();
 
 app.use(cors());
 
 app.use(express.json());
+
+app.use(rateLimiter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 

@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import { getCustomRepository } from 'typeorm';
 import User from '../typeorm/entities/User';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
-import RedisCache from '@shared/cache/RedisCache';
+import redisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   id: string;
@@ -27,8 +27,6 @@ class UpdateUserService {
     if (userExists && email !== user.email) {
       throw new AppError('There is already a user with this email.');
     }
-
-    const redisCache = new RedisCache();
 
     await redisCache.invalidate('api-movies-USER_LIST');
 

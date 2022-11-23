@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import { getRepository } from 'typeorm';
 import Movie from '../typeorm/entities/Movie';
-import RedisCache from '@shared/cache/RedisCache';
+import redisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   title: string;
@@ -19,8 +19,6 @@ class CreateMovieService {
     if (movieExists) {
       throw new AppError('There is already a movie with this name.');
     }
-
-    const redisCache = new RedisCache();
 
     const movie = moviesRepository.create({
       title,

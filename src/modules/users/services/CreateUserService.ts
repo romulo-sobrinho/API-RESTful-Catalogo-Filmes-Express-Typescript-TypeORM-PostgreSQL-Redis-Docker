@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import { getCustomRepository } from 'typeorm';
 import User from '../typeorm/entities/User';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
-import RedisCache from '@shared/cache/RedisCache';
+import redisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   name: string;
@@ -18,8 +18,6 @@ class CreateUserService {
     if (emailExists) {
       throw new AppError('Email address already used.');
     }
-
-    const redisCache = new RedisCache();
 
     const hashedPassord = await hash(password, 8);
 

@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import { getRepository } from 'typeorm';
 import Movie from '../typeorm/entities/Movie';
-import RedisCache from '@shared/cache/RedisCache';
+import redisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   id: string;
@@ -16,8 +16,6 @@ class DeleteMovieService {
     if(!movie) {
       throw new AppError('Movie not found.');
     }
-
-    const redisCache = new RedisCache();
 
     await redisCache.invalidate('api-movies-MOVIE_LIST');
 

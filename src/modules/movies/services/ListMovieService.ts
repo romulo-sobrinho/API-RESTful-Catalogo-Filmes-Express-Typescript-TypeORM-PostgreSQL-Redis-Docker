@@ -1,12 +1,10 @@
 import { getRepository } from 'typeorm';
 import Movie from '../typeorm/entities/Movie';
-import RedisCache from '@shared/cache/RedisCache';
+import redisCache from '@shared/cache/RedisCache';
 
 class ListMovieService {
   public async execute(): Promise<Movie[]> {
     const moviesRepository = getRepository(Movie);
-
-    const redisCache = new RedisCache();
 
     let movies = await redisCache.recover<Movie[]>('api-movies-MOVIE_LIST');
 
