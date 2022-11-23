@@ -1,6 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import { getRepository } from 'typeorm';
 import Movie from '../typeorm/entities/Movie';
+import RedisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   title: string;
@@ -12,10 +13,14 @@ interface IRequest {
 class CreateMovieService {
   public async execute({ title, description, genre, url_image }: IRequest): Promise<Movie> {
     const moviesRepository = getRepository(Movie);
+
     const movieExists = await moviesRepository.findOne({ title });
+
     if (movieExists) {
       throw new AppError('There is already a movie with this name.');
     }
+
+    const redisCache = new RedisCache();
 
     const movie = moviesRepository.create({
       title,
@@ -23,6 +28,8 @@ class CreateMovieService {
       genre,
       url_image
     })
+
+    await redisCache.invalidate('api-movies-MOVIE_LIST');
 
     await moviesRepository.save(movie);
 

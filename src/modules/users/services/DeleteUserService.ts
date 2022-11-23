@@ -1,6 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import { getCustomRepository } from 'typeorm';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
+import RedisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   id: string;
@@ -15,6 +16,10 @@ class DeleteUserService {
     if(!user) {
       throw new AppError('User not found.');
     }
+
+    const redisCache = new RedisCache();
+
+    await redisCache.invalidate('api-movies-USER_LIST');
 
     await usersRepository.remove(user);
   }

@@ -3,6 +3,7 @@ import { hash } from 'bcryptjs';
 import { getCustomRepository } from 'typeorm';
 import User from '../typeorm/entities/User';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
+import RedisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   name: string;
@@ -18,6 +19,8 @@ class CreateUserService {
       throw new AppError('Email address already used.');
     }
 
+    const redisCache = new RedisCache();
+
     const hashedPassord = await hash(password, 8);
 
     const user = usersRepository.create({
@@ -25,6 +28,8 @@ class CreateUserService {
       email,
       password: hashedPassord
     })
+
+    await redisCache.invalidate('api-movies-USER_LIST');
 
     await usersRepository.save(user);
 

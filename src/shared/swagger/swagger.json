@@ -196,6 +196,46 @@
         }
       }
     },
+    "/sessions": {
+      "post": {
+        "summary": "Autenticação de usuário - Geração de Token",
+        "description": "Essa rota é responsável por autenticar o usuário com base no email e senha e emissão de token de autorização de acesso para as rotas de filmes",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Session"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "email": "email@gmail.com",
+                    "password": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Incorrect email/password combination."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/movies": {
       "post": {
         "summary": "Cadastro de filme",
@@ -407,6 +447,30 @@
           },
           "password": {
             "type": "string"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
+            }
+          },
+          "token": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string"
+              }
+            }
           }
         }
       },

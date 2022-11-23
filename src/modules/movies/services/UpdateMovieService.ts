@@ -1,6 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import { getRepository } from 'typeorm';
 import Movie from '../typeorm/entities/Movie';
+import RedisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   id: string;
@@ -25,6 +26,10 @@ class UpdateMovieService {
     if (movieExists && title !== movie.title) {
       throw new AppError('There is already a movie with this name.');
     }
+
+    const redisCache = new RedisCache();
+
+    await redisCache.invalidate('api-movies-MOVIE_LIST');
 
     movie.title = title;
     movie.description = description;
