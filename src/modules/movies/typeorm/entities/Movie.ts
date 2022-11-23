@@ -1,7 +1,8 @@
 import { Column, UpdateDateColumn, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { IMovie } from '@modules/movies/domain/models/IMovie';
 
 @Entity('movies')
-class Movie {
+class Movie implements IMovie {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
