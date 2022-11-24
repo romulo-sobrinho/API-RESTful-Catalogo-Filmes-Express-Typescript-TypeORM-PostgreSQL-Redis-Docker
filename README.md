@@ -22,7 +22,7 @@
   #### Arquivo .env.example
     📌 Utilize esse arquivo de variáveis de ambiente como base
   
-  #### Arquivo ormconfig.json
+  #### Arquivo ormconfig.example.json
     📌 Utilize esse arquivo de configurações do banco de dados postgres, incluindo entidades e migrações
 
 <br>
@@ -31,6 +31,7 @@
 
 <h2 align="center">🚧Instruções necessárias para testar a API🚧</h2>
 <br> 
+
   #### API documentada com Swagger UI, utilize o seguinte endpoint para acesso a documentação da API e testes
     📌 /api-docs
 
