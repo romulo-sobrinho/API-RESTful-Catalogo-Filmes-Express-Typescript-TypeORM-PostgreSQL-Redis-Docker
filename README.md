@@ -138,5 +138,5 @@
 
 
 <hr>
-<h3 align="center">🎖️PROJETO EM CONSTRUÇÃO🎖️</h3>
+<h3 align="center">🎖️PROJETO EM FINALIZADO🎖️</h3>
 <hr>
